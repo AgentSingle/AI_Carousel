@@ -8,29 +8,34 @@ if (Slider_Wrapper[0] != undefined){
         let InterValId = "";
         let Carouse_Moving = 'Moving';
         // let ParentElm = element.parentElement;
-        // let CMD = -1; /* Carousel Movement Direction */
+        let CMD = -1; /* Carousel Movement Direction */
         
-        element.addEventListener('touchstart', () => {
-            Carouse_Moving='';
-        })
+        // element.addEventListener('touchstart', () => {
+        //     Carouse_Moving='';
+        // })
 
         element.addEventListener('mouseenter', () => {
             Carouse_Moving='';
         })
 
-        element.addEventListener('touchend', () => {
-            Carouse_Moving='Moving';
-        })
+        // element.addEventListener('touchend', () => {
+        //     Carouse_Moving='Moving';
+        // })
 
         element.addEventListener('mouseleave', () => {
             Carouse_Moving='Moving';
         })
 
+        // Transition Cards Perticular Time Interval
         const TransitionFunction = ()=>{
             let CWHolder = element.firstElementChild; 
             let CW = CWHolder.firstElementChild;
             CW.addEventListener('transitionend', () => {
-                CW.appendChild(CW.firstElementChild);
+                if (CMD == -1){
+                    CW.appendChild(CW.firstElementChild);
+                }else if (CMD == 1){
+                    CW.prepend(CW.lastElementChild);
+                }
                 CW.style.transition = 'none';
                 CW.style.transform = `translatex(${0}px)`;
                 setTimeout(()=>{
@@ -68,12 +73,53 @@ if (Slider_Wrapper[0] != undefined){
             */
             xMove = (((CNTdisplaing * CNTWidth) + gap_between_CNT*(CNTdisplaing-1)) -screenWidth)/2
             
-
+            // First-time Move Carousel
             const moveCarousel = () =>{
                 let move = CNTWidth + gap_between_CNT
-                CW.style.transform = `translatex(${-move}px)`; 
+                if (Carouse_Moving=='Moving' & CMD == -1){
+                    CW.style.transform = `translatex(${-move}px)`;
+                }else if (Carouse_Moving=='Moving' & CMD == 1){
+                    CW.style.transform = `translatex(${move}px)`;
+                }
             }
             
+
+            // ADDING LEFT RIGHT NAVIGATION BUTTON
+            const addNevigationButton = () =>{
+                let NevigationButton = document.createElement('div');
+                NevigationButton.className = 'NavigationButtons';
+
+                let NVbtnPrevious = document.createElement('div');
+                NVbtnPrevious.className = 'Previous PeVNCommon';
+                NVbtnPrevious.innerHTML = '&lsaquo;';
+
+                let NVbtnNext = document.createElement('div');
+                NVbtnNext.className = 'Next PeVNCommon';
+                NVbtnNext.innerHTML = '&rsaquo;';
+
+                NevigationButton.prepend(NVbtnPrevious)
+                NevigationButton.appendChild(NVbtnNext)
+                element.appendChild(NVbtnPrevious)
+                element.appendChild(NVbtnNext)
+
+                
+
+                NVbtnPrevious.addEventListener('click', ()=>{
+                    if (CMD == -1){
+                        CMD = 1
+                    }
+                    let move = CNTWidth + gap_between_CNT
+                    CWHolder.style.justifyContent = 'flex-end';
+                    CW.style.transform = `translatex(${move}px)`;
+                })
+                NVbtnNext.addEventListener('click', ()=>{
+                    CMD = -1
+                    let move = CNTWidth + gap_between_CNT
+                    CWHolder.style.justifyContent = 'flex-start';
+                    CW.style.transform = `translatex(${-move}px)`;
+                })
+            }
+
             window.addEventListener('resize', ()=>{
                 clearTimeout(timeOutFunctionId);
                 timeOutFunctionId = "";
@@ -90,6 +136,7 @@ if (Slider_Wrapper[0] != undefined){
                 clearInterval(InterValId);
                 InterValId = "";
                 if (!InterValId) InterValId = setInterval(moveCarousel, sliding_duration);
+                addNevigationButton();
             }
             if((CNTdisplaing==2) & (totalCNT>2)){
                 move = (CNTWidth-((screenWidth-CNTWidth)/2))+gap_between_CNT
