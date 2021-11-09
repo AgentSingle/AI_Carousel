@@ -1,5 +1,5 @@
 let Slider_Wrapper = document.querySelectorAll('.Slider_Wrapper');
-const sliding_duration = 3000;
+const sliding_duration = 4000;
 
 if (Slider_Wrapper[0] != undefined){
 
@@ -9,19 +9,12 @@ if (Slider_Wrapper[0] != undefined){
         let Carouse_Moving = 'Moving';
         // let ParentElm = element.parentElement;
         let CMD = -1; /* Carousel Movement Direction */
-        
-        // element.addEventListener('touchstart', () => {
-        //     Carouse_Moving='';
-        // })
+        let IsTuchDown = false;
+        let startX;
 
         element.addEventListener('mouseenter', () => {
             Carouse_Moving='';
         })
-
-        // element.addEventListener('touchend', () => {
-        //     Carouse_Moving='Moving';
-        // })
-
         element.addEventListener('mouseleave', () => {
             Carouse_Moving='Moving';
         })
@@ -39,7 +32,6 @@ if (Slider_Wrapper[0] != undefined){
                 CW.style.transition = 'none';
                 CW.style.transform = `translatex(${0}px)`;
                 setTimeout(()=>{
-                    console.warn('ok')
                     CW.style.transition = 'all 0.5s ease-in-out 0.5s';
                 })
             });
@@ -82,7 +74,39 @@ if (Slider_Wrapper[0] != undefined){
                     CW.style.transform = `translatex(${move}px)`;
                 }
             }
-            
+
+            // DETECTING TOUCH
+            element.addEventListener('touchstart', (e)=>{
+                IsTuchDown = true;
+                Carouse_Moving='';
+                let touch = e.touches[0]
+                startX = touch.pageX - element.offsetLeft;
+            }, { passive: true })
+
+            element.addEventListener('touchend', () => {
+                IsTuchDown = false;
+                Carouse_Moving='Moving';
+            }, { passive: true })
+
+            element.addEventListener('touchmove', (e)=>{
+                Carouse_Moving='';
+                if(!IsTuchDown) return;
+                let touch = e.touches[0]
+                const x = touch.pageX - element.offsetLeft;
+                const slidMove = x - startX;
+                let move = CNTWidth + gap_between_CNT
+                if(slidMove<0){
+                    CWHolder.style.justifyContent = 'flex-end';
+                    CW.style.transform = `translatex(${-move}px)`;
+                    CMD = -1
+                }
+                if(slidMove>0){
+                    CWHolder.style.justifyContent = 'flex-end';
+                    CW.style.transform = `translatex(${move}px)`;
+                    CMD = 1
+                }
+            }, { passive: true })
+
 
             // ADDING LEFT RIGHT NAVIGATION BUTTON
             const addNevigationButton = () =>{
