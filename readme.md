@@ -21,6 +21,6 @@
   We Can Add Multiple Carousel With Different Cards Style
 </h3>
 <h3 align="center">
-<img src=Images/Carousel_Img_3.png' alt='emoji' width="50%" height="50%">
+<img src='Images/Carousel_Img_3.png' alt='emoji' width="50%" height="50%">
 </h3>
 
