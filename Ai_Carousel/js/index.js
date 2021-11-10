@@ -189,25 +189,31 @@ if (Slider_Wrapper[0] != undefined){
                         if(isNaN(CarouselClass) == true){
                             CW.children[i].className = (`${i+1} ${CarouselClass}`)
                         }
+
                         let new_div = document.createElement('div');
                         new_div.innerText = (i+1)
                         new_div.className = `Slider_Button`;
                         counter_click.appendChild(new_div);
 
-                        // if (i==1){
-                        //     new_div.classList.add('Slider_Button_Active')
-                        // }
-                        
-                        // // if (CNTWidth > screenWidth){
-                        // //     CW.children[i].style.maxWidth = `${screenWidth}px`;
-                        // //     CWHolder.style.transform = `translatex(${-(screenWidth+gap_between_CNT)}px)`;
-                        // // }
-                        // // if((CNTdisplaing<=2) & (totalCNT==2) & ((2*CNTWidth+gap_between_CNT) > screenWidth)){
-                        // //     move = (screenWidth-CNTWidth)/2
-                        // //     CWHolder.style.maxWidth = `${CNTWidth}px`;
-                        // //     CWHolder.style.transform = `translatex(${move}px)`;
-                        // //     CW.children[i].style.minWidth = `${CNTWidth}px`;
-                        // // }
+                        const TranslateCards = () =>{
+                            let newCarouselClass = CW.children[0].classList[0];
+                            if(Number(newCarouselClass) != (i+1)){
+                                let move = (i-Number(newCarouselClass)) * (CNTWidth + gap_between_CNT) 
+                                console.warn(move)
+                                if (CMD == -1){
+                                    CW.style.transform = `translatex(${-move}px)`;
+                                }else if (CMD == 1){
+                                    CW.style.transform = `translatex(${move}px)`;
+                                }
+                                Carouse_Moving = 'Moving';
+                            }
+                        }
+
+                        new_div.addEventListener('click', ()=>{
+                            Carouse_Moving = '';
+                            TranslateCards();
+                        })
+
                     }
                     if (totalCNT > 2){
                         ParentElm.appendChild(counter_click);
@@ -238,6 +244,10 @@ if (Slider_Wrapper[0] != undefined){
                 
                 if ((totalCNT > 2) & (ParentElm.children[1] != undefined)){
                     ParentElm.removeChild(ParentElm.children[1])
+                }
+                if(element.children.length>1){
+                    element.removeChild(element.children[1])
+                    element.removeChild(element.children[1])
                 }
             }
             if(CWwidth > screenWidth){
