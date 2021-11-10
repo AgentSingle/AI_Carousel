@@ -56,14 +56,14 @@
     justify-content: center;
     font-size: 40px;
     font-weight: bold;
-    background-color: #ffdfdfb0;
-    color: orangered;
+    background-color: #0084ff;
     margin-left: 5px;
     margin-right: 5px;
     position: relative;
     z-index: 1;
     border-radius: 5%;
 }
+
 .carder:first-child{
     margin-left: 0;
 }

@@ -7,8 +7,11 @@ html{
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    font-family: sans-serif;
 }
-
+body{
+    background-color: rgb(255, 255, 255);
+}
 
 .Slider_Holder{
     display: flex;
@@ -132,7 +135,8 @@ html{
 
 .Slider_Button_Active{
     background: #00c785;
-    border: 0.2rem solid #21e0a1;
+    background: #9700d3;
+    border: 0.1rem solid #00ffaa;
     color: #ffffff;
 }
 
