@@ -11,6 +11,7 @@ if (Slider_Wrapper[0] != undefined){
         let CMD = -1; /* Carousel Movement Direction */
         let IsTuchDown = false;
         let startX;
+        let sectionIndex = 2
 
         element.addEventListener('mouseenter', () => {
             Carouse_Moving='';
@@ -33,9 +34,10 @@ if (Slider_Wrapper[0] != undefined){
                 CW.style.transform = `translatex(${0}px)`;
                 setTimeout(()=>{
                     CW.style.transition = 'all 0.5s ease-in-out 0.5s';
+                    sectionIndex = Number(CW.children[1].classList[0])
                 })
 
-                counterParentElm = element.parentElement.children[1]
+                counterParentElm = ParentElm.children[1]
                 if (counterParentElm != undefined){
                     let counterNext;
                     let counterPrevious;
@@ -62,7 +64,6 @@ if (Slider_Wrapper[0] != undefined){
                     }
                     if(counterPrevious == undefined & CMD == 1){
                         counterParentElm.lastElementChild.classList.add('Slider_Button_Active');
-                        // console.warn(counterParentElm.firstElementChild)
                         counterParentElm.firstElementChild.classList.remove('Slider_Button_Active');
                     }
                 }
@@ -196,21 +197,32 @@ if (Slider_Wrapper[0] != undefined){
                         counter_click.appendChild(new_div);
 
                         const TranslateCards = () =>{
-                            let newCarouselClass = CW.children[0].classList[0];
-                            if(Number(newCarouselClass) != (i+1)){
-                                let move = (i-Number(newCarouselClass)) * (CNTWidth + gap_between_CNT) 
-                                console.warn(move)
-                                if (CMD == -1){
-                                    CW.style.transform = `translatex(${-move}px)`;
-                                }else if (CMD == 1){
-                                    CW.style.transform = `translatex(${move}px)`;
+                            if(((i+1)-(sectionIndex))>0){
+                                CMD = -1
+                                for (Cno=0; Cno<((i+1)-(sectionIndex)); Cno++){
+                                    CW.appendChild(CW.children[0])
                                 }
-                                Carouse_Moving = 'Moving';
+                                sectionIndex = i+1
                             }
+                            if(((i+1)-(sectionIndex))<0){
+                                CMD = 1
+                                for (Cno=0; Cno<((sectionIndex)-(i+1)); Cno++){
+                                    CW.prepend(CW.children[totalCNT-1])
+                                }
+                                sectionIndex = i+1
+                            }
+                            if((i+1)-(sectionIndex)==0){
+                                return false
+                            }
+                            setTimeout(() => {
+                                Carouse_Moving = 'Moving';
+                            }, 2000);
                         }
 
                         new_div.addEventListener('click', ()=>{
                             Carouse_Moving = '';
+                            counter_click.children[sectionIndex-1].classList.remove('Slider_Button_Active')
+                            new_div.classList.add('Slider_Button_Active')
                             TranslateCards();
                         })
 
